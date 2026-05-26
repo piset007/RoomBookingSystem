@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { BookingStatus } from '../enums/BookingStatus';
+import { AuthenticatedRequest } from '../middlewares/auth.middleware';
 import BookingService from '../services/BookingService';
 import asyncHandler from '../utils/asyncHandler';
 import { parseId } from '../utils/request';
@@ -16,8 +17,8 @@ export class BookingController extends BaseController {
     this.sendOk(res, await this.findBooking(req));
   });
 
-  public store = asyncHandler(async (req: Request, res: Response) => {
-    const booking = await this.service.createBooking(this.getCreateInput(req));
+  public store = asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
+    const booking = await this.service.createBooking(this.getCreateInput(req), req.user);
     this.sendCreated(res, booking);
   });
 
@@ -34,9 +35,9 @@ export class BookingController extends BaseController {
     return parseId(req.params.id);
   }
 
-  private getCreateInput(req: Request) {
+  private getCreateInput(req: AuthenticatedRequest) {
     return {
-      userId: Number(req.body.userId),
+      userId: Number(req.user?.role === 'student' ? req.user.id : req.body.userId || req.user?.id),
       roomId: Number(req.body.roomId),
       startTime: this.parseDate(req.body.startTime),
       endTime: this.parseDate(req.body.endTime),

@@ -33,6 +33,15 @@ export class BookingRepository extends BaseRepository {
     const bookings = rows as any[];
     return bookings[0] || null;
   }
+
+  public async countFutureActiveByUser(userId: number) {
+    const [rows] = await pool.query(
+      'SELECT COUNT(*) AS total FROM bookings WHERE userId = ? AND status IN (?, ?) AND endTime > NOW()',
+      [userId, BookingStatus.PENDING, BookingStatus.APPROVED],
+    );
+    const counts = rows as Array<{ total: number }>;
+    return counts[0]?.total || 0;
+  }
 }
 
 export default BookingRepository;
