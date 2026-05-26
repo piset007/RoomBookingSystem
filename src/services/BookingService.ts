@@ -7,7 +7,11 @@ export interface CreateBookingInput {
   roomId: number;
   startTime: Date;
   endTime: Date;
+  purpose?: string | null;
+  subjectId?: number | null;
   status?: BookingStatus;
+  approvedBy?: number | null;
+  approvedAt?: Date | null;
 }
 
 export class BookingService {
@@ -65,7 +69,11 @@ export interface UpdateBookingInput {
   roomId?: number;
   startTime?: Date;
   endTime?: Date;
+  purpose?: string | null;
+  subjectId?: number | null;
   status?: BookingStatus;
+  approvedBy?: number | null;
+  approvedAt?: Date | null;
 }
 
 export default BookingService;

@@ -40,7 +40,11 @@ export class BookingController extends BaseController {
       roomId: Number(req.body.roomId),
       startTime: this.parseDate(req.body.startTime),
       endTime: this.parseDate(req.body.endTime),
+      purpose: req.body.purpose ?? null,
+      subjectId: req.body.subjectId ? Number(req.body.subjectId) : null,
       status: req.body.status as BookingStatus | undefined,
+      approvedBy: req.body.approvedBy ? Number(req.body.approvedBy) : null,
+      approvedAt: req.body.approvedAt ? this.parseDate(req.body.approvedAt) : null,
     };
   }
 

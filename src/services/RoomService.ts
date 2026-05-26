@@ -1,4 +1,5 @@
 import { RoomStatus } from '../enums/RoomStatus';
+import { RoomAccessPolicy } from '../models/Room';
 import RoomRepository from '../repositories/RoomRepository';
 
 export interface CreateRoomInput {
@@ -6,6 +7,7 @@ export interface CreateRoomInput {
   capacity: number;
   location: string;
   status?: RoomStatus;
+  accessPolicy?: RoomAccessPolicy;
 }
 
 export interface UpdateRoomInput {
@@ -13,6 +15,7 @@ export interface UpdateRoomInput {
   capacity?: number;
   location?: string;
   status?: RoomStatus;
+  accessPolicy?: RoomAccessPolicy;
 }
 
 export class RoomService {

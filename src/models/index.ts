@@ -1,6 +1,10 @@
 export { default as Booking } from './Booking';
+export { default as Class } from './Class';
+export { default as ClassStudent } from './ClassStudent';
 export { default as Permission } from './Permission';
 export { default as RolePermission } from './RolePermission';
 export { default as Room } from './Room';
+export { default as RoomAccessRule } from './RoomAccessRule';
+export { default as Subject } from './Subject';
 export { default as TimeTable } from './TimeTable';
 export { default as User } from './User';

@@ -1,19 +1,23 @@
 import TimeTableRepository from '../repositories/TimeTableRepository';
 
 export interface CreateTimeTableInput {
+  classId: number;
   roomId: number;
+  teacherId: number;
+  subjectId: number;
   dayOfWeek: string;
   startTime: string;
   endTime: string;
-  subject?: string | null;
 }
 
 export interface UpdateTimeTableInput {
+  classId?: number;
   roomId?: number;
+  teacherId?: number;
+  subjectId?: number;
   dayOfWeek?: string;
   startTime?: string;
   endTime?: string;
-  subject?: string | null;
 }
 
 export class TimeTableService {
