@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import HttpError from '../errors/HttpError';
+import { Role } from '../enums/Role';
 import UserRepository from '../repositories/UserRepository';
 
 export interface AuthTokenPayload {
@@ -9,12 +10,38 @@ export interface AuthTokenPayload {
   email: string;
 }
 
+export interface RegisterUserInput {
+  fullName: string;
+  email: string;
+  password: string;
+  role?: Role;
+  department?: string | null;
+}
+
 export class AuthService {
   private users = new UserRepository();
 
   public async authenticate(email: string, password: string) {
     const user = await this.getActiveUser(email);
     await this.verifyPassword(user, password);
+
+    return this.hidePassword(user);
+  }
+
+  public async register(data: RegisterUserInput) {
+    const existingUser = await this.users.findByEmail(data.email);
+    if (existingUser) {
+      throw new HttpError(409, 'Email already registered');
+    }
+
+    const user = await this.users.create({
+      fullName: data.fullName,
+      email: data.email,
+      password: await bcrypt.hash(data.password, 12),
+      role: data.role ?? Role.STUDENT,
+      department: data.department ?? null,
+      isActive: true,
+    });
 
     return this.hidePassword(user);
   }

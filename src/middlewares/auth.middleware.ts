@@ -1,26 +1,34 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
 export interface AuthenticatedRequest extends Request {
   user?: {
     id: number;
     role: string;
+    email: string;
   };
 }
 
-export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  const header = req.headers.authorization;
-  if (!header?.startsWith('Bearer ')) {
-    res.status(401).json({ message: 'Missing bearer token' });
-    return;
+const authenticate = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : undefined;
+  const secret = process.env.JWT_SECRET;
+
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+
+  if (!secret) {
+    return res.status(500).json({ error: 'JWT secret is not configured' });
   }
 
   try {
-    req.user = jwt.verify(header.slice(7), process.env.JWT_SECRET || 'change-me') as AuthenticatedRequest['user'];
+    const decoded = jwt.verify(token, secret) as { id: number; role: string; email: string };
+    req.user = decoded;
     next();
-  } catch {
-    res.status(401).json({ message: 'Invalid token' });
+  } catch (error) {
+    return res.status(401).json({ error: 'Invalid token' });
   }
 };
 
-export default authMiddleware;
+export default authenticate;
