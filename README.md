@@ -40,9 +40,15 @@ DB_USER=root
 DB_PASSWORD=
 DB_CONNECTION_LIMIT=10
 PORT=3000
-JWT_SECRET=your_jwt_secret
+JWT_SECRET=replace_this_with_a_generated_secret
 JWT_EXPIRES_IN=1d
 STUDENT_MAX_ACTIVE_FUTURE_BOOKINGS=3
+```
+
+Generate a strong JWT secret with:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 ```
 
 3. Create the database and run migrations manually using the SQL files in `migrations/`.
